@@ -3,7 +3,11 @@ import ReactDOM from "react-dom/client";
 
 // Header component
 function Header() {
-    return <h1>Welcome to My Pizza Shop</h1>;
+    return (
+        <h1 style={{ color: "orange", fontSize: "48px", textTransform: "uppercase" }}>
+            Welcome to My Pizza Shop
+        </h1>
+    );
 }
 
 // Pizza component
@@ -21,7 +25,7 @@ function Pizza({ name, toppings, image }) {
 const pizzaData = [
     { name: "Focaccia", toppings: ["Olive Oil", "Salt"], image: "/images/focaccia.jpg" },
     { name: "Funghi", toppings: ["Mushroom", "Cheese"], image: "/images/funghi.jpg" },
-    { name: "Margherita", toppings: ["Cheese", "Tomato"], image:"images/margherita.jpg" },
+    { name: "Margherita", toppings: ["Cheese", "Tomato"], image: "images/margherita.jpg" },
     { name: "Prosciutto", toppings: ["Ham", "Cheese"], image: "/images/prosciutto.jpg" },
     { name: "Salamino", toppings: ["Salami", "Cheese"], image: "/images/salamino.jpg" },
     { name: "Spinaci", toppings: ["Spinach", "Cheese"], image: "/images/spinaci.jpg" },
