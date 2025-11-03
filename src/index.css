@@ -183,6 +183,15 @@ body {
   background-color: #e9bb24;
 }
 
+.footer {
+    text-align: center;
+    padding: 30px;
+    background-color: #ffffff;
+    font-size: 30px;
+    color: #fe0238;
+    margin-top: 40px;
+}
+
 /*
 SPACING SYSTEM (px)
 2 / 4 / 8 / 12 / 16 / 24 / 32 / 40 / 48 / 64 / 80 / 96 / 128

@@ -14,7 +14,7 @@ function Header() {
 // Pizza component
 function Pizza({ name, toppings, image }) {
     return (
-        <div>
+        <div style={{ margin: "20px", textAlign: "center" }}>
             <h2>{name}</h2>
             <img src={image} alt={name} style={{ width: "200px", height: "auto" }} />
             <p>Toppings: {toppings.join(", ")}</p>
@@ -25,8 +25,12 @@ function Pizza({ name, toppings, image }) {
 // Menu component
 function Menu({ pizzas }) {
     return (
-        <div>
-            <h2 style={{ color: "green", fontSize: "36px" }}>Our Menu</h2>
+        <div style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+        }}>
+            <h2>Our Menu</h2>
             {pizzas.map((pizza, index) => (
                 <Pizza
                     key={index}
@@ -36,6 +40,17 @@ function Menu({ pizzas }) {
                 />
             ))}
         </div>
+    );
+}
+
+// Footer component
+function Footer() {
+    const currentHour = new Date().getHours();
+    const isOpen = currentHour >= 13 && currentHour < 24; 
+    return (
+        <footer className="footer">
+            {isOpen ? "We are currently open, Welcome in ! " : "Sorry, we are closed, pls come another time!"}
+        </footer>
     );
 }
 
@@ -55,6 +70,7 @@ function App() {
         <div>
             <Header />
             <Menu pizzas={pizzaData} />
+            <Footer />
         </div>
     );
 }
