@@ -22,6 +22,23 @@ function Pizza({ name, toppings, image }) {
     );
 }
 
+// Menu component
+function Menu({ pizzas }) {
+    return (
+        <div>
+            <h2 style={{ color: "green", fontSize: "36px" }}>Our Menu</h2>
+            {pizzas.map((pizza, index) => (
+                <Pizza
+                    key={index}
+                    name={pizza.name}
+                    toppings={pizza.toppings}
+                    image={pizza.image}
+                />
+            ))}
+        </div>
+    );
+}
+
 // Array of pizza data
 const pizzaData = [
     { name: "Focaccia", toppings: ["Olive Oil", "Salt"], image: "/images/focaccia.jpg" },
@@ -37,14 +54,7 @@ function App() {
     return (
         <div>
             <Header />
-            {pizzaData.map((pizza, index) => (
-                <Pizza
-                    key={index}
-                    name={pizza.name}
-                    toppings={pizza.toppings}
-                    image={pizza.image}
-                />
-            ))}
+            <Menu pizzas={pizzaData} />
         </div>
     );
 }
