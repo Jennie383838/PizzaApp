@@ -1,80 +1,170 @@
-import React from "react";
+import React, { useState } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 
-// Header component
 function Header() {
-    return (
-        <h1 style={{ color: "orange", fontSize: "48px", textTransform: "uppercase" }}>
-            Welcome to My Pizza Shop
-        </h1>
-    );
+  return (
+    <header className="header-section">
+      <h1>Xavier's Pizzeria</h1>
+      <h2>OUR MENU</h2>
+      <p>Authentic Italian cuisine, all from my stone oven</p>
+    </header>
+  );
 }
 
-// Pizza component
-function Pizza({ name, toppings, image }) {
-    return (
-        <div style={{ margin: "20px", textAlign: "center" }}>
-            <h2>{name}</h2>
-            <img src={image} alt={name} style={{ width: "200px", height: "auto" }} />
-            <p>Toppings: {toppings.join(", ")}</p>
+function Pizza({ name, description, price, image, onSelect, isSelected }) {
+  const [isClicked, setIsClicked] = useState(false);
+
+  const handleClick = () => {
+    setIsClicked(true);
+    onSelect({ name, price });
+    setTimeout(() => setIsClicked(false), 400);
+  };
+
+  return (
+    <div className="pizza-item">
+      <div className="pizza-info">
+        <img src={image} alt={name} />
+        <div>
+          <h3>{name}</h3>
+          <p>{description}</p>
         </div>
-    );
+      </div>
+      <div className="pizza-action">
+        <p className="price">${price}</p>
+        <button
+          className={`select-btn ${
+            isSelected ? "selected" : ""
+          } ${isClicked ? "clicked" : ""}`}
+          onClick={handleClick}
+        >
+          {isSelected ? "Selected ✓" : "Select"}
+        </button>
+      </div>
+    </div>
+  );
 }
 
-// Menu component
-function Menu({ pizzas }) {
-    return (
-        <div style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-        }}>
-            <h2>Our Menu</h2>
-            {pizzas.map((pizza, index) => (
-                <Pizza
-                    key={index}
-                    name={pizza.name}
-                    toppings={pizza.toppings}
-                    image={pizza.image}
-                />
-            ))}
-        </div>
-    );
+function Menu({ pizzas, onSelect, selectedPizzas }) {
+  return (
+    <main className="menu-section">
+      {pizzas.map((pizza, index) => (
+        <Pizza
+          key={index}
+          name={pizza.name}
+          description={pizza.description}
+          price={pizza.price}
+          image={pizza.image}
+          onSelect={onSelect}
+          isSelected={selectedPizzas.some((p) => p.name === pizza.name)}
+        />
+      ))}
+    </main>
+  );
 }
 
-// Footer component
 function Footer() {
-    const currentHour = new Date().getHours();
-    const isOpen = currentHour >= 13 && currentHour < 24; 
-    return (
-        <footer className="footer">
-            {isOpen ? "We are currently open, Welcome in ! " : "Sorry, we are closed, pls come another time!"}
-        </footer>
-    );
+  const hour = new Date().getHours();
+  const isOpen = hour >= 9 && hour < 22;
+  return (
+    <footer className="footer-section">
+      <p>{isOpen ? "We’re currently open" : "Sorry, we’re closed"}</p>
+      <p>Hours: 10:00 AM - 10:00 PM</p>
+    </footer>
+  );
 }
 
-// Array of pizza data
 const pizzaData = [
-    { name: "Focaccia", toppings: ["Olive Oil", "Salt"], image: "/images/focaccia.jpg" },
-    { name: "Funghi", toppings: ["Mushroom", "Cheese"], image: "/images/funghi.jpg" },
-    { name: "Margherita", toppings: ["Cheese", "Tomato"], image: "images/margherita.jpg" },
-    { name: "Prosciutto", toppings: ["Ham", "Cheese"], image: "/images/prosciutto.jpg" },
-    { name: "Salamino", toppings: ["Salami", "Cheese"], image: "/images/salamino.jpg" },
-    { name: "Spinaci", toppings: ["Spinach", "Cheese"], image: "/images/spinaci.jpg" },
+  {
+    name: "Focaccia",
+    description: "Bread with Italian olive oil and rosemary",
+    price: 6,
+    image: "/images/focaccia.jpg",
+  },
+  {
+    name: "Pizza Margherita",
+    description: "Tomato and mozzarella",
+    price: 10,
+    image: "/images/margherita.jpg",
+  },
+  {
+    name: "Pizza Spinaci",
+    description: "Tomato, mozzarella, spinach, and ricotta cheese",
+    price: 12,
+    image: "/images/spinaci.jpg",
+  },
+  {
+    name: "Pizza Funghi",
+    description: "Tomato, mozzarella, mushrooms, and onion",
+    price: 12,
+    image: "/images/funghi.jpg",
+  },
+  {
+    name: "Pizza Salamino",
+    description: "Tomato, mozzarella, and pepperoni",
+    price: 15,
+    image: "/images/salamino.jpg",
+  },
+  {
+    name: "Pizza Prosciutto",
+    description: "Tomato, mozzarella, ham, arugula, and burrata cheese",
+    price: 18,
+    image: "/images/prosciutto.jpg",
+  },
 ];
 
-// App component
 function App() {
-    return (
-        <div>
-            <Header />
-            <Menu pizzas={pizzaData} />
-            <Footer />
-        </div>
-    );
+  const [search, setSearch] = useState("");
+  const [selectedPizzas, setSelectedPizzas] = useState([]);
+
+  const filteredPizzas = pizzaData.filter((pizza) =>
+    pizza.name.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const handleSelect = (pizza) => {
+    const alreadySelected = selectedPizzas.find((p) => p.name === pizza.name);
+    if (alreadySelected) {
+      setSelectedPizzas(selectedPizzas.filter((p) => p.name !== pizza.name));
+    } else {
+      setSelectedPizzas([...selectedPizzas, pizza]);
+    }
+  };
+
+  const handleOrder = () => {
+    if (selectedPizzas.length === 0) {
+      alert("Please select at least one pizza!");
+    } else {
+      const total = selectedPizzas.reduce((sum, p) => sum + p.price, 0);
+      const names = selectedPizzas.map((p) => p.name).join(", ");
+      alert(`You ordered: ${names}\nTotal: $${total}\nThank you! 🍕`);
+    }
+  };
+
+  return (
+    <div className="app-container">
+      <Header />
+      <div className="search-container">
+        <input
+          type="text"
+          placeholder="Search pizza..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
+      <Menu
+        pizzas={filteredPizzas}
+        onSelect={handleSelect}
+        selectedPizzas={selectedPizzas}
+      />
+      <div className="order-container">
+        <button onClick={handleOrder} className="order-btn">
+          Order
+        </button>
+      </div>
+      <Footer />
+    </div>
+  );
 }
 
-// Render App to the screen
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(<App />);
